@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "45639e7b-6fa6-4f92-a266-439ec5f7e5cc",
+		"name": "Eurokars API Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Form ERF",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_LOCAL}}/api-gateway/v1/erf",
+							"host": [
+								"{{URL_LOCAL}}"
+							],
+							"path": [
+								"api-gateway",
+								"v1",
+								"erf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_LOCAL}}/api-gateway/v1/erf/123456",
+							"host": [
+								"{{URL_LOCAL}}"
+							],
+							"path": [
+								"api-gateway",
+								"v1",
+								"erf",
+								"123456"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
