@@ -2,7 +2,6 @@ const express = require('express');
 require('express-async-errors');
 const router = express.Router();
 const httpStatus = require('http-status');
-const InvariantError = require('../../exceptions/InvariantError');
 
 // Repositories
 const FormERFRepository = require('../../repositories/mysql/formERFRepository');
@@ -11,7 +10,7 @@ const formERFRepository = new FormERFRepository();
 const CacheRepository = require('../../repositories/redis/cacheRepository');
 const cacheRepository = new CacheRepository();
 
-// const taskValidator = require('../../validators/formERFValidator');
+const ERFValidator = require('../../validators/ERFValidator');
 
 // Rabbit MQ Example
 // await rabbitMq.sendMessage(`export:task:${id}`, JSON.stringify(data));
@@ -21,109 +20,133 @@ const cacheRepository = new CacheRepository();
 
 router.get('/', async (req, res) => {
    try {
-      const data = await cacheRepository.get(`erf:all`);
+      const erfs = await cacheRepository.get(`erf:all`);
 
       res.status(httpStatus.OK).json({
          code: httpStatus.OK,
          status: 'SUCCESS',
          message: httpStatus[`${httpStatus.OK}_NAME`],
-         data: JSON.parse(data)
+         data: JSON.parse(erfs)
       });
    } catch (err) {
-      const data = await formERFRepository.getAll();
+      const erfs = await formERFRepository.getERFs();
 
-      await cacheRepository.set(`erf:all`, JSON.stringify(data), 60);
+      await cacheRepository.set(`erf:all`, JSON.stringify(erfs), 60);
 
       res.status(httpStatus.OK).json({
          code: httpStatus.OK,
          status: 'SUCCESS',
          message: httpStatus[`${httpStatus.OK}_NAME`],
-         data: data
+         data: erfs
       });
    }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/get', async (req, res) => {
    const {
       id
-   } = req.params;
+   } = req.query;
 
    try {
-      const data = await cacheRepository.get(`erf:${id}`);
+      const erfs = await cacheRepository.get(`erf:${id}`);
 
       res.status(httpStatus.OK).json({
          code: httpStatus.OK,
          status: 'SUCCESS',
          message: httpStatus[`${httpStatus.OK}_NAME`],
-         data: JSON.parse(data)
+         data: JSON.parse(erfs)
       });
    } catch (error) {
-      const data = await formERFRepository.getById({
+      const erfs = await formERFRepository.getERF({
          id
       });
    
-      await cacheRepository.set(`erf:${id}`, JSON.stringify(data), 60);
+      await cacheRepository.set(`erf:${id}`, JSON.stringify(erfs), 60);
    
       res.status(httpStatus.OK).json({
          code: httpStatus.OK,
          status: 'SUCCESS',
          message: httpStatus[`${httpStatus.OK}_NAME`],
-         data: data
+         data: erfs
       });
    }
 })
 
-// router.post('/', async (req, res) => {
-//    taskValidator.AddTaskValidator(req.body);
+router.post('/', async (req, res) => {
+   ERFValidator.AddERFValidator(req.body);
 
-//    const task = await formERFRepository.addTask(req.body);
+   const erf = await formERFRepository.addERF(req.body);
 
-//    if(task) {
-//       await cacheRepository.delete(`task:all`);
-//    }
+   if(erf) {
+      await cacheRepository.delete(`erf:all`);
+   }
 
-//    res.status(httpStatus.CREATED).json({
-//       code: httpStatus.CREATED,
-//       status: 'SUCCESS',
-//       message: httpStatus[`${httpStatus.CREATED}_NAME`],
-//       data: task
-//    });
-// })
+   res.status(httpStatus.CREATED).json({
+      code: httpStatus.CREATED,
+      status: 'SUCCESS',
+      message: httpStatus[`${httpStatus.CREATED}_NAME`],
+      data: erf
+   });
+})
 
-// router.put('/:id', async (req, res) => {
-//    const { id } = req.params;
+router.put('/', async (req, res) => {
+   const { id } = req.query;
    
-//    const task = await formERFRepository.updateTask({ id, body: req.body })
+   const erf = await formERFRepository.updateERF({ id, params: req.body })
 
-//    if(task) {
-//       await cacheRepository.delete(`task:${id}`);
-//       await cacheRepository.delete(`task:all`);
-//    }
+   if(erf) {
+      await cacheRepository.delete(`erf:${id}`);
+      await cacheRepository.delete(`erf:all`);
+   }
 
-//    res.status(httpStatus.CREATED).json({
-//       code: httpStatus.CREATED,
-//       status: 'SUCCESS',
-//       message: httpStatus[`${httpStatus.CREATED}_NAME`],
-//       data: task
-//    });
-// })
+   res.status(httpStatus.CREATED).json({
+      code: httpStatus.CREATED,
+      status: 'SUCCESS',
+      message: httpStatus[`${httpStatus.CREATED}_NAME`],
+      data: erf
+   });
+})
 
-// router.delete('/:id', async (req, res) => {
-//    const { id } = req.params;
+router.delete('/', async (req, res) => {
+   const { id } = req.query;
    
-//    const task = await formERFRepository.deleteTask({ id })
+   const erf = await formERFRepository.deleteERF({ id })
 
-//    if(task) {
-//       await cacheRepository.delete(`task:${id}`);
-//       await cacheRepository.delete(`task:all`);
-//    }
+   if(erf) {
+      await cacheRepository.delete(`erf:${id}`);
+      await cacheRepository.delete(`erf:all`);
+   }
 
-//    res.status(httpStatus.OK).json({
-//       code: httpStatus.OK,
-//       status: 'SUCCESS',
-//       message: httpStatus[`${httpStatus.OK}_NAME`],
-//       data: task
-//    });
-// })
+   res.status(httpStatus.OK).json({
+      code: httpStatus.OK,
+      status: 'SUCCESS',
+      message: httpStatus[`${httpStatus.OK}_NAME`],
+      data: erf
+   });
+})
+
+router.get('/dropdown', async (req, res) => {
+   try {
+      const erfs = await cacheRepository.get(`erf:all-dropdown`);
+
+      res.status(httpStatus.OK).json({
+         code: httpStatus.OK,
+         status: 'SUCCESS',
+         message: httpStatus[`${httpStatus.OK}_NAME`],
+         data: JSON.parse(erfs)
+      });
+   } catch (err) {
+      const erfs = await formERFRepository.getERFs();
+
+      await cacheRepository.set(`erf:all-dropdown`, JSON.stringify(erfs), 60);
+
+      res.status(httpStatus.OK).json({
+         code: httpStatus.OK,
+         status: 'SUCCESS',
+         message: httpStatus[`${httpStatus.OK}_NAME`],
+         data: erfs
+      });
+   }
+})
 
 module.exports = router;

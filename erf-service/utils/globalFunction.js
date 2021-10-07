@@ -5,7 +5,7 @@ time = () => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
-    var day = date.getDate(),
+    var day = String(date.getDate()).padStart(2, '0'),
         month = monthNames[date.getMonth()],
         year = date.getFullYear(),
         hour = date.getHours(),
@@ -23,7 +23,7 @@ time_date = () => {
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
 
-    var day = date.getDate(),
+    var day = String(date.getDate()).padStart(2, '0'),
         month = monthNames[date.getMonth()],
         year = date.getFullYear()
 
@@ -51,7 +51,7 @@ check_null_start = (value) => {
 time_his = () => {
     var date = new Date();
 
-    var day = date.getDate(),
+    var day = String(date.getDate()).padStart(2, '0'),
         month = date.getMonth() + 1,
         year = date.getFullYear(),
         hour = date.getHours(),
@@ -66,7 +66,7 @@ time_his = () => {
 log_time = () => {
     var date = new Date();
 
-    var day = date.getDate(),
+    var day = String(date.getDate()).padStart(2, '0'),
         month = date.getMonth() + 1,
         year = date.getFullYear(),
         hour = date.getHours(),
@@ -77,7 +77,6 @@ log_time = () => {
 
     return log_time
 }
-
 
 capital_each_word = (letter) => {
     let callback = letter.toLowerCase()
@@ -101,13 +100,31 @@ check_date = (value) => {
     return newdate;
 }
 
+current_date = () => {
+    var date = new Date();
+
+    var day = String(date.getDate()).padStart(2, '0'),
+        month = date.getMonth() + 1,
+        year = date.getFullYear();
+
+    var current_date = `${year}-${month}-${day}`
+
+    return current_date
+}
+
+remove_number_format = (value) => {
+    return value.replace(/\./g,'')
+}
+
 module.exports = {
-    time: time,
-    time_his: time_his,
-    capital_each_word: capital_each_word,
-    log_time: log_time,
-    check_null: check_null,
-    check_null_start: check_null_start,
-    check_date: check_date,
-    time_date: time_date
+    time,
+    time_his,
+    capital_each_word,
+    log_time,
+    check_null,
+    check_null_start,
+    check_date,
+    time_date,
+    current_date,
+    remove_number_format
 }
