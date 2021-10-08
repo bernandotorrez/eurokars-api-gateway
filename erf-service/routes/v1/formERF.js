@@ -136,7 +136,7 @@ router.get('/dropdown', async (req, res) => {
          data: JSON.parse(erfs)
       });
    } catch (err) {
-      const erfs = await formERFRepository.getERFs();
+      const erfs = await formERFRepository.getERFDropdown();
 
       await cacheRepository.set(`erf:all-dropdown`, JSON.stringify(erfs), 60);
 
