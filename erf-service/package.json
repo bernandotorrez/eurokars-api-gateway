@@ -1,12 +1,12 @@
 {
-  "name": "task_service",
+  "name": "erf_service",
   "version": "1.0.0",
-  "description": "Microservice - Task Service",
+  "description": "Microservice - ERF Service",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "pm2:dev": "SET NODE_ENV=development&& pm2 start server.js -i 1 --name task-service",
-    "pm2:prod": "SET NODE_ENV=production&& pm2 start server.js -i 1 --name task-service",
+    "pm2:dev": "SET NODE_ENV=development&& pm2 start server.js -i 1 --name erf-service",
+    "pm2:prod": "SET NODE_ENV=production&& pm2 start server.js -i 1 --name erf-service",
     "test": "jest --forceExit"
   },
   "keywords": [
