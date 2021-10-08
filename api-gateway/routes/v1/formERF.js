@@ -18,6 +18,11 @@ router.get('/get', async (req, res) => {
    return res.json(erf.data)
 })
 
+router.get('/dropdown', async (req, res) => {
+   const erf = await api.get(`/v1/erf/dropdown`);
+   return res.json(erf.data)
+})
+
 router.post('/', async (req, res) => {
    const erf = await api.post(`/v1/erf`, req.body);
    return res.json(erf.data)
