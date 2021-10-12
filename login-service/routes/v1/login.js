@@ -31,8 +31,6 @@ router.post('/', async (req, res) => {
       password
    });
 
-   console.log(user)
-
    const data = {
       username: user.username,
       level: user.level,
