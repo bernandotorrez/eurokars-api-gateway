@@ -2,7 +2,7 @@ const Joi = require('@hapi/joi');
 const BadRequestError = require('../exceptions/BadRequestError');
 
 const AddERFSchema = Joi.object({
-    id_erf: Joi.string().max(25).required(),
+    id_erf: Joi.string().max(50).required(),
     date: Joi.date(),
     id_user: Joi.number().required(),
     id_position: Joi.number().required(),
